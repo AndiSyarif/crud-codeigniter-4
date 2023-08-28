@@ -11,4 +11,4 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'DashboardController::index');
 
 //route barang
-$routes->resource('barang');
+$routes->resource('barang', ['controller' => 'BarangController']);

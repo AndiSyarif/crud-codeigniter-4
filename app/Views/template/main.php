@@ -239,6 +239,37 @@
         })();
     </script>
 
+    <!-- alert -->
+    <?php if (session()->getFlashdata('save')) : ?>
+        <script>
+            Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "<?= session()->getFlashdata('save') ?>",
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('update')) : ?>
+        <script>
+            Swal.fire({
+                icon: "info",
+                title: "Success",
+                text: "<?= session()->getFlashdata('update') ?>",
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('delete')) : ?>
+        <script>
+            Swal.fire({
+                icon: "error",
+                title: "Success",
+                text: "<?= session()->getFlashdata('delete') ?>",
+            });
+        </script>
+    <?php endif; ?>
+
 </body>
 
 </html>

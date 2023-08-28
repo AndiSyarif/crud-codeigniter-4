@@ -21,42 +21,52 @@ class BarangController extends BaseController
 
     public function new()
     {
-        // Show create form
+
+        $title  = 'Add Barang';
+
+        return view('barang/barang-add', [
+            'title' => $title,
+            'validation' => \Config\Services::validation(),
+        ]);
     }
 
     public function create()
     {
-        // Load the form validation library
-        $validation = \Config\Services::validation();
 
-        // If the form is submitted
-        if ($this->request->getPost()) {
-            // Validate input
-            if (!$validation->run($this->request->getPost())) {
-                // Validation failed, redirect back to the form with errors
-                return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-            }
+        //validasi
+        if (!$this->validate([
+            'name' => 'required|is_unique[barangs.name]',
+            'category' => 'required',
+            'supplier' => 'required',
+            'stock' => 'required',
+            'price' => 'required',
+            'note' => 'required',
+        ])) {
+            $validation = \Config\Services::validation();
 
-            // Validated successfully, prepare data to store
-            $data = [
-                'name' => $this->request->getPost('name'),
-                'category' => $this->request->getPost('category'),
-                'supplier' => $this->request->getPost('supplier'),
-                'stock' => $this->request->getPost('stock'),
-                'price' => $this->request->getPost('price'),
-                'note' => $this->request->getPost('note'),
-            ];
+            //dd($validation);
 
-            // Create a new record using the model
-            $model = new BarangModel();
-            $model->insert($data);
+            return redirect()->back()->withInput()->with('validation', $validation);
+        };
 
-            // Redirect to a success page or another view
-            return redirect()->to('/barangs')->with('success', 'Data has been added successfully!');
-        }
 
-        // If not submitted, show the form view
-        return view('barang/create');
+
+
+        $data = [
+            'name' => $this->request->getPost('name'),
+            'category' => $this->request->getPost('category'),
+            'supplier' => $this->request->getPost('supplier'),
+            'stock' => $this->request->getPost('stock'),
+            'price' => $this->request->getPost('price'),
+            'note' => $this->request->getPost('note'),
+        ];
+
+        $model = new BarangModel();
+        $model->insert($data);
+
+        session()->setFlashdata('save', 'Barang has been saved !');
+
+        return redirect()->to('/barang');
     }
 
     public function edit($id)
