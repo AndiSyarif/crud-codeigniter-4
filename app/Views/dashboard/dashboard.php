@@ -32,7 +32,7 @@ Dashboard
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>10</h3>
+                            <h3><?= $countbarang ?></h3>
                             <p>Barang</p>
                         </div>
                         <div class="icon">
