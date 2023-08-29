@@ -52,9 +52,9 @@ Barang
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($barang as $data) : ?>
+                                    <?php foreach ($barang as $key => $data) : ?>
                                         <tr>
-                                            <td><?= $data['id_barang'] ?></td>
+                                            <td><?= $key + 1 ?></td>
                                             <td><?= $data['name'] ?></td>
                                             <td><?= $data['category'] ?></td>
                                             <td><?= $data['supplier'] ?></td>
