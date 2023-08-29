@@ -21,36 +21,29 @@ class BarangController extends BaseController
 
     public function new()
     {
-
         $title  = 'Add Barang';
 
         return view('barang/barang-add', [
             'title' => $title,
-            'validation' => \Config\Services::validation(),
         ]);
     }
 
     public function create()
     {
-
         //validasi
-        if (!$this->validate([
+        $validation = \Config\Services::validation();
+        $validation->setRules([
             'name' => 'required|is_unique[barangs.name]',
             'category' => 'required',
             'supplier' => 'required',
             'stock' => 'required',
             'price' => 'required',
             'note' => 'required',
-        ])) {
-            $validation = \Config\Services::validation();
+        ]);
 
-            //dd($validation);
-
-            return redirect()->back()->withInput()->with('validation', $validation);
-        };
-
-
-
+        if (!$validation->withRequest($this->request)->run()) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
 
         $data = [
             'name' => $this->request->getPost('name'),
@@ -69,18 +62,67 @@ class BarangController extends BaseController
         return redirect()->to('/barang');
     }
 
-    public function edit($id)
+    public function edit($id_barang)
     {
-        // Show edit form for a specific record
+        $model = new BarangModel();
+        $barang = $model->where('id_barang', $id_barang)->first();
+        $title  = 'Edit Barang';
+
+        return view('barang/barang-edit', [
+            'title' => $title,
+            'barang' => $barang,
+        ]);
     }
 
-    public function update($id)
+    public function update($id_barang)
     {
-        // Handle form submission to update data for a specific record
+        //validasi
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'name' => 'required|is_unique[barangs.name,id_barang,' . $id_barang . ']',
+            'category' => 'required',
+            'supplier' => 'required',
+            'stock' => 'required',
+            'price' => 'required',
+            'note' => 'required',
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }
+
+        $data = [
+            'name' => $this->request->getPost('name'),
+            'category' => $this->request->getPost('category'),
+            'supplier' => $this->request->getPost('supplier'),
+            'stock' => $this->request->getPost('stock'),
+            'price' => $this->request->getPost('price'),
+            'note' => $this->request->getPost('note'),
+        ];
+
+        $model = new BarangModel();
+
+        $model->update($id_barang, $data);
+
+        session()->setFlashdata('update', 'Barang has been updated !');
+
+        return redirect()->to('/barang');
     }
 
-    public function delete($id)
+    public function delete($id_barang)
     {
-        // Handle record deletion
+        $model = new BarangModel();
+
+        $deletedbarang = $model->where('id_barang', $id_barang)->first();
+
+        if (!$deletedbarang) {
+            throw new \CodeIgniter\Database\Exceptions\DatabaseException('Record not found');
+        }
+
+        $model->delete($deletedbarang);
+
+        session()->setFlashdata('delete', 'Barang has been deleted !');
+
+        return redirect()->to('/barang');
     }
 }

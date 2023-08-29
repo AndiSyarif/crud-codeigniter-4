@@ -38,7 +38,6 @@ Add Barang
                                 </a>
                             </div>
                         </div>
-                        <?= $validation->listErrors(); ?>
                         <form class="needs-validation" novalidate action="/barang" method="POST">
                             <?= csrf_field() ?>
                             <div class="card-body">
@@ -46,10 +45,10 @@ Add Barang
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label for="name">Name</label>
-                                            <input type="text" name="name" class="form-control <?= ($validation->hasError('name')) ? 'is-invalid' : '' ?>" id="name" placeholder="Name Barang" value="<?= old('name') ?>" required>
-                                            <div class="invalid-feedback">
-                                                <?= $validation->getError('name'); ?>
-                                            </div>
+                                            <input type="text" name="name" class="form-control <?= session('errors.name') ? 'is-invalid' : '' ?>" id="name" placeholder="Name Barang" value="<?= old('name') ?>" required>
+                                            <?php if (session('errors.name')) : ?>
+                                                <span class="invalid-feedback text-danger"><?= session('errors.name') ?></span>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
